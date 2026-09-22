@@ -396,7 +396,12 @@
                             <div class="d-flex gap-3 align-items-start">
                                 <!-- รูปห้อง (พร้อม Lazy Loading & Alt) -->
                                 @if($room->image)
-                                    <img src="{{ asset($room->image) }}" class="room-thumb shadow-sm" alt="รูปห้อง {{ $room->room_name }}" loading="lazy" decoding="async">
+                                    <img src="{{ str_starts_with($room->image, 'data:') ? $room->image : asset($room->image) }}" 
+                                         class="room-thumb shadow-sm" 
+                                         alt="รูปห้อง {{ $room->room_name }}" 
+                                         loading="lazy" 
+                                         decoding="async"
+                                         onerror="this.onerror=null; this.src='{{ asset('images/rooms/room_mr1.jpg') }}';">
                                 @else
                                     <div class="room-thumb bg-light d-flex align-items-center justify-content-center text-secondary" aria-label="ไม่มีรูปภาพห้อง">
                                         <i class="bi bi-image fs-4 opacity-50"></i>

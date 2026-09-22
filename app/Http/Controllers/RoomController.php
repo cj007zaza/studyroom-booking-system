@@ -41,18 +41,21 @@ class RoomController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $mime = $file->getMimeType();
+            $data = file_get_contents($file->getRealPath());
+            $imagePath = 'data:' . $mime . ';base64,' . base64_encode($data);
+
             try {
                 $targetDir = public_path('images/rooms');
                 if (!File::exists($targetDir)) {
                     File::makeDirectory($targetDir, 0775, true, true);
                 }
 
-                $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-                $request->file('image')->move($targetDir, $imageName);
-                $imagePath = 'images/rooms/' . $imageName;
+                $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($targetDir, $imageName);
             } catch (\Exception $e) {
-                // หากอัปโหลดไฟล์ล้มเหลว ให้ละเว้นรูปและบันทึกข้อมูลส่วนอื่นได้ปกติ
-                $imagePath = null;
+                // เก็บรูปเป็น Base64 ในฐานข้อมูลอยู่แล้ว ไม่กังวลกรณีดิสก์มีปัญหา
             }
         }
 
@@ -95,22 +98,25 @@ class RoomController extends Controller
         $imagePath = $room->image;
 
         if ($request->hasFile('image')) {
+            $file = $request->file('image');
+            $mime = $file->getMimeType();
+            $data = file_get_contents($file->getRealPath());
+            $imagePath = 'data:' . $mime . ';base64,' . base64_encode($data);
+
             try {
                 $targetDir = public_path('images/rooms');
                 if (!File::exists($targetDir)) {
                     File::makeDirectory($targetDir, 0775, true, true);
                 }
 
-                if ($room->image && File::exists(public_path($room->image))) {
+                if ($room->image && !str_starts_with($room->image, 'data:') && File::exists(public_path($room->image))) {
                     File::delete(public_path($room->image));
                 }
 
-                $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-                $request->file('image')->move($targetDir, $imageName);
-                $imagePath = 'images/rooms/' . $imageName;
+                $imageName = time() . '_' . uniqid() . '.' . $file->getClientOriginalExtension();
+                $file->move($targetDir, $imageName);
             } catch (\Exception $e) {
-                // ป้องกัน 500 error จากปัญหา permission หรือ directory ของ cloud hosting
-                $imagePath = $room->image;
+                // เก็บรูปเป็น Base64 ในฐานข้อมูลอยู่แล้ว ไม่กังวลกรณีดิสก์มีปัญหา
             }
         }
 

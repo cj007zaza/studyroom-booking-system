@@ -72,7 +72,11 @@
                         @if($room->image)
                             <div class="mb-2">
                                 <span class="text-secondary small d-block mb-1">รูปภาพปัจจุบัน:</span>
-                                <img src="{{ asset($room->image) }}" alt="{{ $room->room_name }}" width="140" height="95" class="rounded-3 object-fit-cover border shadow-sm">
+                                <img src="{{ str_starts_with($room->image, 'data:') ? $room->image : asset($room->image) }}" 
+                                     alt="{{ $room->room_name }}" 
+                                     width="140" height="95" 
+                                     class="rounded-3 object-fit-cover border shadow-sm"
+                                     onerror="this.onerror=null; this.src='{{ asset('images/rooms/room_mr1.jpg') }}';">
                             </div>
                         @endif
                         <input type="file" name="image" id="image" class="form-control @error('image') is-invalid @enderror" accept="image/*">

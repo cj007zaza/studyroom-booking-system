@@ -44,7 +44,11 @@
                         <tr>
                             <td class="ps-4">
                                 @if($room->image)
-                                    <img src="{{ asset($room->image) }}" alt="{{ $room->room_name }}" width="80" height="55" class="rounded-3 object-fit-cover shadow-sm border">
+                                    <img src="{{ str_starts_with($room->image, 'data:') ? $room->image : asset($room->image) }}" 
+                                         alt="{{ $room->room_name }}" 
+                                         width="80" height="55" 
+                                         class="rounded-3 object-fit-cover shadow-sm border"
+                                         onerror="this.onerror=null; this.src='{{ asset('images/rooms/room_mr1.jpg') }}';">
                                 @else
                                     <span class="badge bg-light text-secondary border">ไม่มีรูปภาพ</span>
                                 @endif
