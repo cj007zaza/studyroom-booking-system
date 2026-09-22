@@ -11,6 +11,7 @@ fi
 php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
+php artisan event:cache || true
 
 # Ensure public images directory and storage permissions
 mkdir -p /var/www/public/images/rooms
