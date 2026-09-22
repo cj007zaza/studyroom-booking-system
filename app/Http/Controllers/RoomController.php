@@ -40,9 +40,19 @@ class RoomController extends Controller
 
         $imagePath = null;
         if ($request->hasFile('image')) {
-            $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('images/rooms'), $imageName);
-            $imagePath = 'images/rooms/' . $imageName;
+            try {
+                $targetDir = public_path('images/rooms');
+                if (!File::exists($targetDir)) {
+                    File::makeDirectory($targetDir, 0775, true, true);
+                }
+
+                $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+                $request->file('image')->move($targetDir, $imageName);
+                $imagePath = 'images/rooms/' . $imageName;
+            } catch (\Exception $e) {
+                // หากอัปโหลดไฟล์ล้มเหลว ให้ละเว้นรูปและบันทึกข้อมูลส่วนอื่นได้ปกติ
+                $imagePath = null;
+            }
         }
 
         Room::create([
@@ -78,13 +88,23 @@ class RoomController extends Controller
         $imagePath = $room->image;
 
         if ($request->hasFile('image')) {
-            if ($room->image && File::exists(public_path($room->image))) {
-                File::delete(public_path($room->image));
-            }
+            try {
+                $targetDir = public_path('images/rooms');
+                if (!File::exists($targetDir)) {
+                    File::makeDirectory($targetDir, 0775, true, true);
+                }
 
-            $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
-            $request->file('image')->move(public_path('images/rooms'), $imageName);
-            $imagePath = 'images/rooms/' . $imageName;
+                if ($room->image && File::exists(public_path($room->image))) {
+                    File::delete(public_path($room->image));
+                }
+
+                $imageName = time() . '_' . uniqid() . '.' . $request->file('image')->getClientOriginalExtension();
+                $request->file('image')->move($targetDir, $imageName);
+                $imagePath = 'images/rooms/' . $imageName;
+            } catch (\Exception $e) {
+                // ป้องกัน 500 error จากปัญหา permission หรือ directory ของ cloud hosting
+                $imagePath = $room->image;
+            }
         }
 
         $room->update([

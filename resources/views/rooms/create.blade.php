@@ -90,4 +90,14 @@
         </div>
     </div>
 </div>
+
+<script>
+document.getElementById('image')?.addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (file && file.size > 2 * 1024 * 1024) { // > 2MB
+        alert('รูปภาพมีขนาดใหญ่เกินไป (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)\nกรุณาเลือกรูปภาพที่มีขนาดไม่เกิน 2 MB หรือย่อขนาดรูปก่อนอัปโหลดครับ');
+        this.value = ''; // Reset file input
+    }
+});
+</script>
 @endsection
