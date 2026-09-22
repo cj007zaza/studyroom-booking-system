@@ -96,8 +96,8 @@
 <script>
 document.getElementById('image')?.addEventListener('change', function(e) {
     const file = e.target.files[0];
-    if (file && file.size > 2 * 1024 * 1024) { // > 2MB
-        alert('รูปภาพมีขนาดใหญ่เกินไป (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)\nกรุณาเลือกรูปภาพที่มีขนาดไม่เกิน 2 MB หรือย่อขนาดรูปก่อนอัปโหลดครับ');
+    if (file && file.size > 10 * 1024 * 1024) { // > 10MB
+        alert('รูปภาพมีขนาดใหญ่เกินไป (' + (file.size / (1024 * 1024)).toFixed(2) + ' MB)\nกรุณาเลือกรูปภาพที่มีขนาดไม่เกิน 10 MB ครับ');
         this.value = ''; // Reset file input
     }
 });

@@ -12,6 +12,11 @@ php artisan config:cache || true
 php artisan route:cache || true
 php artisan view:cache || true
 
+# Ensure public images directory and storage permissions
+mkdir -p /var/www/public/images/rooms
+chown -R www-data:www-data /var/www/public /var/www/storage /var/www/bootstrap/cache
+chmod -R 775 /var/www/public /var/www/storage /var/www/bootstrap/cache
+
 # Start PHP-FPM in background
 php-fpm -D
 

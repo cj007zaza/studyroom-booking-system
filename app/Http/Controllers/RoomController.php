@@ -29,13 +29,14 @@ class RoomController extends Controller
             'room_name' => 'required|string|max:255|unique:rooms,room_name',
             'capacity' => 'nullable|integer',
             'facilities' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'status' => 'required|string|in:available,maintenance',
         ], [
             'building.required' => 'กรุณาระบุหอพัก',
             'room_name.required' => 'กรุณาระบุชื่อห้อง',
             'room_name.unique' => 'ชื่อห้องนี้มีอยู่ในระบบแล้ว',
             'image.image' => 'ไฟล์ที่อัปโหลดต้องเป็นไฟล์รูปภาพเท่านั้น',
+            'image.max' => 'ไฟล์รูปภาพต้องมีขนาดไม่เกิน 10 MB',
         ]);
 
         $imagePath = null;
@@ -81,8 +82,14 @@ class RoomController extends Controller
             'room_name' => 'required|string|max:255|unique:rooms,room_name,' . $room->id,
             'capacity' => 'nullable|integer',
             'facilities' => 'nullable|string',
-            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:2048',
+            'image' => 'nullable|image|mimes:jpeg,png,jpg,gif,webp|max:10240',
             'status' => 'required|string|in:available,maintenance',
+        ], [
+            'building.required' => 'กรุณาระบุหอพัก',
+            'room_name.required' => 'กรุณาระบุชื่อห้อง',
+            'room_name.unique' => 'ชื่อห้องนี้มีอยู่ในระบบแล้ว',
+            'image.image' => 'ไฟล์ที่อัปโหลดต้องเป็นไฟล์รูปภาพเท่านั้น',
+            'image.max' => 'ไฟล์รูปภาพต้องมีขนาดไม่เกิน 10 MB',
         ]);
 
         $imagePath = $room->image;
